@@ -29,10 +29,20 @@
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem 
-                            Header="{Binding CurrentAction}" 
-                            Command="{Binding StartStopCommand}"
+                            Header="{Binding StartText}" 
+                            IsVisible="{Binding !IsStarted}"
+                            Command="{Binding StartCommand}"
                             />
+                        <NativeMenuItem 
+                            Header="{Binding StopText}"
+                            IsVisible="{Binding IsStarted}"
+                            Command="{Binding StopCommand}"
+                        />
                         <NativeMenuItemSeparator/>
+                        <NativeMenuItem 
+                            Header="{Binding ExportText}" 
+                            Command="{Binding ExportCommand}"
+                        />
                         <NativeMenuItem 
                             Header="{Binding QuitText}" 
                             Command="{Binding QuitCommand}"

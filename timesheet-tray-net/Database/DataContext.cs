@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
@@ -15,6 +14,8 @@ public class DataContext
 
     public async Task Init()
     {
+        SqlMapper.AddTypeHandler(DateTimeTypeHandler.Default);
+        
         // create database tables if they don't exist
         using var connection = CreateConnection();
         
@@ -22,13 +23,11 @@ public class DataContext
                       CREATE TABLE IF NOT EXISTS 
                       TimeEntries (
                           Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                          EntryDate INTEGER NOT NULL,
-                          EntryType TEXT CHECK( EntryType IN ('Start', 'Stop') ) NOT NULL
+                          EntryDate TEXT NOT NULL,
+                          EntryType INTEGER NOT NULL
                       );
                   """;
         
         await connection.ExecuteAsync(sql);
-        SqlMapper.AddTypeHandler(new DateTimeTypeHandler());
-        SqlMapper.AddTypeHandler(new EntryTypeTypeHandler());
     }
 }

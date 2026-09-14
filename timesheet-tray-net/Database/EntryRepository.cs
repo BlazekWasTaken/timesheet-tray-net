@@ -30,7 +30,7 @@ public class EntryRepository(DataContext context)
     {
         using var connection = context.CreateConnection();
         var sql = """
-                      INSERT INTO TimeEntry (EntryDate, EntryType)
+                      INSERT INTO TimeEntries (EntryDate, EntryType)
                       VALUES (@EntryDate, @EntryType)
                   """;
         await connection.ExecuteAsync(sql, timeEntry);
