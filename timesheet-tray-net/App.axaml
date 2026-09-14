@@ -24,13 +24,19 @@
         <TrayIcons>
             <TrayIcon
                 Icon="/Assets/avalonia-logo.ico"
-                ToolTipText="My Application"
+                ToolTipText="Timesheet"
                 >
                 <TrayIcon.Menu>
                     <NativeMenu>
-                        <NativeMenuItem Header="Show" Command="{Binding ShowCommand}" />
-                        <NativeMenuItemSeparator />
-                        <NativeMenuItem Header="Quit" Command="{Binding QuitCommand}" />
+                        <NativeMenuItem 
+                            Header="{Binding CurrentAction}" 
+                            Command="{Binding StartStopCommand}"
+                            />
+                        <NativeMenuItemSeparator/>
+                        <NativeMenuItem 
+                            Header="{Binding QuitText}" 
+                            Command="{Binding QuitCommand}"
+                            />
                     </NativeMenu>
                 </TrayIcon.Menu>
             </TrayIcon>
