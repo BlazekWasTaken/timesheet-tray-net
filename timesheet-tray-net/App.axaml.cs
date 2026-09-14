@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Formatting.Compact;
+using timesheet_tray_net.Database;
 using timesheet_tray_net.ViewModels;
 
 namespace timesheet_tray_net;
@@ -27,11 +28,19 @@ public partial class App : Application
             loggingBuilder.AddSerilog(serilogLogger);
         });
         
-        // add database
+        serviceCollection.AddSingleton<DataContext>();
+        serviceCollection.AddScoped<EntryRepository>();
+        serviceCollection.AddScoped<EntryService>();
         
         serviceCollection.AddScoped<AppViewModel>();
 
         var serviceProvider = serviceCollection.BuildServiceProvider();
+        
+        {
+            using var scope = serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+            context.Init().GetAwaiter().GetResult();
+        }
         
         DataContext = serviceProvider.GetRequiredService<AppViewModel>();
     }
