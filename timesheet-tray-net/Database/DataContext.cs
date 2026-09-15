@@ -16,15 +16,14 @@ public class DataContext
     {
         SqlMapper.AddTypeHandler(DateTimeTypeHandler.Default);
         
-        // create database tables if they don't exist
         using var connection = CreateConnection();
         
         var sql = """
                       CREATE TABLE IF NOT EXISTS 
                       TimeEntries (
                           Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                          EntryDate TEXT NOT NULL,
-                          EntryType INTEGER NOT NULL
+                          StartDate TEXT NOT NULL,
+                          FinishDate TEXT
                       );
                   """;
         

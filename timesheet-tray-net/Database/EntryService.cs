@@ -11,19 +11,23 @@ public class EntryService(EntryRepository repository)
     {
         return await repository.GetAll();
     }
-
-    public async Task<TimeEntry?> GetById(int id)
-    {
-        return await repository.GetById(id);
-    }
     
-    public async Task Create(EntryType type)
+    public async Task Create()
     {
         var user = new TimeEntry
         {
-            EntryDate = DateTime.UtcNow,
-            EntryType = type
+            StartDate = DateTime.UtcNow
         };
         await repository.Create(user);
+    }
+
+    public async Task Update(int id)
+    {
+        var entry = await repository.GetById(id);
+        if (entry == null)
+            throw new KeyNotFoundException("User not found");
+
+        entry.FinishDate = DateTime.UtcNow;
+        await repository.Update(entry);
     }
 }

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using timesheet_tray_net.Database;
-using timesheet_tray_net.Models;
 
 namespace timesheet_tray_net.ViewModels;
 
@@ -30,27 +29,25 @@ public partial class AppViewModel : ViewModelBase
     private async Task Initialize()
     {
         var entries = await _entryService.GetAll();
-        var last = entries.OrderBy(x => x.EntryDate).LastOrDefault();
+        var last = entries.OrderBy(x => x.StartDate).LastOrDefault();
         if (last == null) return;
-        IsStarted = last.EntryType switch
-        {
-            EntryType.Start => true,
-            EntryType.Stop => false,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        IsStarted = last.FinishDate is null;
     }
     
     [RelayCommand]
     private async Task Start()
     {
-        await _entryService.Create(EntryType.Start);
+        await _entryService.Create();
         IsStarted = true;
     }
     
     [RelayCommand]
     private async Task Stop()
     {
-        await _entryService.Create(EntryType.Stop);
+        var entries = await _entryService.GetAll();
+        var last = entries.OrderBy(x => x.StartDate).LastOrDefault();
+        if (last is null || last.FinishDate is not null) return;
+        await _entryService.Update(last.Id);
         IsStarted = false;
     }
 
@@ -59,7 +56,7 @@ public partial class AppViewModel : ViewModelBase
     {
         foreach (var entry in await _entryService.GetAll())
         {
-            Console.WriteLine($"Time: {entry.EntryDate} - {entry.EntryType}");
+            Console.WriteLine($"Time: {entry.StartDate} - {entry.FinishDate}");
         }
     }
 

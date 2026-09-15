@@ -30,8 +30,20 @@ public class EntryRepository(DataContext context)
     {
         using var connection = context.CreateConnection();
         var sql = """
-                      INSERT INTO TimeEntries (EntryDate, EntryType)
-                      VALUES (@EntryDate, @EntryType)
+                      INSERT INTO TimeEntries (StartDate)
+                      VALUES (@StartDate)
+                  """;
+        await connection.ExecuteAsync(sql, timeEntry);
+    }
+    
+    public async Task Update(TimeEntry timeEntry)
+    {
+        using var connection = context.CreateConnection();
+        var sql = """
+                      UPDATE TimeEntries
+                      SET StartDate = @StartDate,
+                          FinishDate = @FinishDate
+                      WHERE Id = @Id
                   """;
         await connection.ExecuteAsync(sql, timeEntry);
     }

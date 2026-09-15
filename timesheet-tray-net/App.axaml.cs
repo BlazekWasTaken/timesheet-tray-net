@@ -1,11 +1,11 @@
 using Avalonia;
 using Avalonia.Markup.Xaml;
-using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Formatting.Compact;
 using timesheet_tray_net.Database;
+using timesheet_tray_net.Excel;
 using timesheet_tray_net.ViewModels;
 
 namespace timesheet_tray_net;
@@ -32,6 +32,8 @@ public partial class App : Application
         serviceCollection.AddSingleton<DataContext>();
         serviceCollection.AddScoped<EntryRepository>();
         serviceCollection.AddScoped<EntryService>();
+        
+        serviceCollection.AddScoped<ExcelService>();
         
         serviceCollection.AddScoped<AppViewModel>();
 
