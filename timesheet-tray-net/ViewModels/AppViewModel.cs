@@ -1,9 +1,13 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using timesheet_tray_net.Database;
+using timesheet_tray_net.Excel;
 
 namespace timesheet_tray_net.ViewModels;
 
@@ -11,6 +15,7 @@ public partial class AppViewModel : ViewModelBase
 {
     public event EventHandler Loaded;
     private readonly EntryService _entryService;
+    private readonly Window _window;
     
     [ObservableProperty] public partial string StartText { get; set; } = "start working";
     [ObservableProperty] public partial string StopText { get; set; } = "stop working";
@@ -19,9 +24,10 @@ public partial class AppViewModel : ViewModelBase
 
     [ObservableProperty] public partial bool IsStarted { get; set; } = false;
 
-    public AppViewModel(EntryService service)
+    public AppViewModel(EntryService service, Window window)
     {
         _entryService = service;
+        _window = window;
         Loaded += async (_, _) => await Initialize();
         Loaded.Invoke(this, EventArgs.Empty);
     }
@@ -54,10 +60,23 @@ public partial class AppViewModel : ViewModelBase
     [RelayCommand]
     private async Task Export()
     {
-        foreach (var entry in await _entryService.GetAll())
+        var fileType = new FilePickerFileType("spreadsheet file") { Patterns = ["*.xlsx"] };
+        var topLevel = TopLevel.GetTopLevel(_window);
+        if (topLevel is null) return;
+        var storageProvider = topLevel.StorageProvider;
+        var file = await storageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
-            Console.WriteLine($"Time: {entry.StartDate} - {entry.FinishDate}");
-        }
+            Title = "Save timesheet",
+            SuggestedFileName = "timesheet-export",
+            SuggestedFileType = fileType,
+            FileTypeChoices = [ fileType ],
+            DefaultExtension = Path.GetExtension(fileType.Patterns![0])
+        });
+        if (file is null) return;
+        
+        var entries = await _entryService.GetAll();
+        await using var stream = await file.OpenWriteAsync();
+        ExcelService.SaveEntries([.. entries], stream);
     }
 
     [RelayCommand]

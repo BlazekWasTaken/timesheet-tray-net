@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -29,6 +30,7 @@ public partial class App : Application
             loggingBuilder.AddSerilog(serilogLogger);
         });
         
+        serviceCollection.AddSingleton(new Window());
         serviceCollection.AddSingleton<DataContext>();
         serviceCollection.AddScoped<EntryRepository>();
         serviceCollection.AddScoped<EntryService>();
