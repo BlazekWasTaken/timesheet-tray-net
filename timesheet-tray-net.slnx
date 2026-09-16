@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="timesheet-tray-net.Wix/timesheet-tray-net.Wix.csproj" />
   <Project Path="timesheet-tray-net/timesheet-tray-net.csproj" />
 </Solution>

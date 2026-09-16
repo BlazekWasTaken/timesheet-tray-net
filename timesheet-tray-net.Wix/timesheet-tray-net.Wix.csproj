@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
+            Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{604F8CC7-1E14-4912-B875-C295FEC45250}</ProjectGuid>
+        <OutputType>Exe</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>timesheet_tray_net.Wix</RootNamespace>
+        <AssemblyName>timesheet_tray_net.Wix</AssemblyName>
+        <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="System"/>
+        <Reference Include="System.Configuration" />
+        <Reference Include="System.Core"/>
+        <Reference Include="System.Data"/>
+        <Reference Include="System.Xml"/>
+        <Reference Include="WixSharp, Version=2.14.1.0, Culture=neutral, PublicKeyToken=13407310932706d5, processorArchitecture=MSIL">
+          <HintPath>..\packages\WixSharp_wix4.bin.2.14.1\lib\WixSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="WixSharp.Msi, Version=2.14.1.0, Culture=neutral, PublicKeyToken=13407310932706d5, processorArchitecture=MSIL">
+          <HintPath>..\packages\WixSharp_wix4.bin.2.14.1\lib\WixSharp.Msi.dll</HintPath>
+        </Reference>
+        <Reference Include="WixSharp.MsiEventHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a46a711be9f4b976, processorArchitecture=X86">
+          <HintPath>..\packages\WixSharp_wix4.bin.2.14.1\lib\WixSharp.MsiEventHost.exe</HintPath>
+        </Reference>
+        <Reference Include="WixSharp.UI, Version=2.14.1.0, Culture=neutral, PublicKeyToken=13407310932706d5, processorArchitecture=MSIL">
+          <HintPath>..\packages\WixSharp_wix4.bin.2.14.1\lib\WixSharp.UI.dll</HintPath>
+        </Reference>
+        <Reference Include="WixSharp.UI.WPF, Version=2.14.1.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\WixSharp-wix4.WPF.2.14.1\lib\any\WixSharp.UI.WPF.dll</HintPath>
+        </Reference>
+        <Reference Include="WixToolset.Dtf.WindowsInstaller, Version=4.0.0.0, Culture=neutral, PublicKeyToken=a7d136314861246c, processorArchitecture=MSIL">
+          <HintPath>..\packages\WixToolset.Dtf.WindowsInstaller.4.0.1\lib\net20\WixToolset.Dtf.WindowsInstaller.dll</HintPath>
+        </Reference>
+        <Reference Include="WixToolset.Mba.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=a7d136314861246c, processorArchitecture=MSIL">
+          <HintPath>..\packages\WixToolset.Mba.Core.4.0.1\lib\net20\WixToolset.Mba.Core.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Program.cs"/>
+        <Compile Include="Properties\AssemblyInfo.cs"/>
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="packages.config" />
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
+    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+
+</Project>
