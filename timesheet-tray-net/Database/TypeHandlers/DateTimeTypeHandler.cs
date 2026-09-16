@@ -14,7 +14,7 @@ public class DateTimeTypeHandler : SqlMapper.TypeHandler<DateTime>
         DateTime.SpecifyKind(
             DateTime.ParseExact(
                 (string)value, 
-                "yyyy-MM-dd HH:mm:ss.fffffff", 
+                "yyyy-MM-dd HH:mm:ss.FFFFFFF", 
                 System.Globalization.CultureInfo.InvariantCulture), 
             DateTimeKind.Utc);
 }
