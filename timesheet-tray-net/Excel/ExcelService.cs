@@ -10,7 +10,7 @@ namespace timesheet_tray_net.Excel;
 
 public class ExcelService
 {
-    public static void SaveEntries(List<TimeEntry> entries, Stream fileStream)
+    public static bool SaveEntries(List<TimeEntry> entries, Stream fileStream)
     {
         entries.ForEach(x =>
         {
@@ -44,7 +44,7 @@ public class ExcelService
                         Hours = Math.Round(x.FinishDate?.Subtract(x.StartDate).TotalHours ?? 0, 2)
                     });
 
-                var table = worksheet.Cell(1, 1).InsertTable(monthEntries);
+                var table = worksheet.Cell(2, 2).InsertTable(monthEntries);
                 table.ShowTotalsRow = true;
 
                 table.Fields
@@ -53,7 +53,15 @@ public class ExcelService
                 worksheet.Columns().AdjustToContents();
             }
         }
-        
-        workbook.SaveAs(fileStream);
+
+        try
+        {
+            workbook.SaveAs(fileStream);
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 }

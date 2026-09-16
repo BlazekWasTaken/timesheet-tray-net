@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 using timesheet_tray_net.Database;
 using timesheet_tray_net.Excel;
 
@@ -14,6 +15,7 @@ namespace timesheet_tray_net.ViewModels;
 public partial class AppViewModel : ViewModelBase
 {
     public event EventHandler Loaded;
+    private readonly ILogger<AppViewModel> _logger;
     private readonly EntryService _entryService;
     private readonly Window _window;
     
@@ -24,8 +26,9 @@ public partial class AppViewModel : ViewModelBase
 
     [ObservableProperty] public partial bool IsStarted { get; set; } = false;
 
-    public AppViewModel(EntryService service, Window window)
+    public AppViewModel(ILogger<AppViewModel> logger, EntryService service, Window window)
     {
+        _logger = logger;
         _entryService = service;
         _window = window;
         Loaded += async (_, _) => await Initialize();
@@ -82,7 +85,13 @@ public partial class AppViewModel : ViewModelBase
         
         var entries = await _entryService.GetAll();
         await using var stream = await file.OpenWriteAsync();
-        ExcelService.SaveEntries([.. entries], stream);
+        var saveSuccess = ExcelService.SaveEntries([.. entries], stream);
+        _logger.LogInformation("Export success: {success}", saveSuccess);
+        if (!saveSuccess) return;
+        
+        var launcher = topLevel.Launcher;
+        var launchSuccess = await launcher.LaunchFileAsync(file);
+        _logger.LogInformation("File launch success: {LaunchSuccess}", launchSuccess);
     }
 
     [RelayCommand]
