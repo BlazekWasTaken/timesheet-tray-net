@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -18,12 +19,14 @@ public partial class AppViewModel : ViewModelBase
     private readonly ILogger<AppViewModel> _logger;
     private readonly EntryService _entryService;
     private readonly Window _window;
+    private Timer? _timer;
     
     [ObservableProperty] public partial string StartText { get; set; } = "start working";
     [ObservableProperty] public partial string StopText { get; set; } = "stop working";
     [ObservableProperty] public partial string ExportText { get; set; } = "export";
     [ObservableProperty] public partial string QuitText { get; set; } = "quit";
 
+    [ObservableProperty] public partial DateTime CurrentStartTime { get; set; }
     [ObservableProperty] public partial bool IsStarted { get; set; } = false;
 
     public AppViewModel(ILogger<AppViewModel> logger, EntryService service, Window window)
@@ -41,13 +44,17 @@ public partial class AppViewModel : ViewModelBase
         var last = entries.OrderBy(x => x.StartDate).LastOrDefault();
         if (last == null) return;
         IsStarted = last.FinishDate is null;
+        CurrentStartTime = last.StartDate;
+        InitTimer();
     }
     
     [RelayCommand]
     private async Task Start()
     {
-        await _entryService.Create();
+        var entry = await _entryService.Create();
+        CurrentStartTime = entry.StartDate;
         IsStarted = true;
+        InitTimer();
     }
     
     [RelayCommand]
@@ -62,8 +69,8 @@ public partial class AppViewModel : ViewModelBase
             await _entryService.Update(last.Id, finishDate);
         else
             await _entryService.Delete(last.Id);
-        
         IsStarted = false;
+        DeinitTimer();
     }
 
     [RelayCommand]
@@ -96,4 +103,20 @@ public partial class AppViewModel : ViewModelBase
 
     [RelayCommand]
     private static void Quit() => Environment.Exit(0);
+    
+    private void InitTimer()
+    {
+        if (_timer is not null) return;
+        _timer = new Timer(1000);
+        _timer.Elapsed += (_, _) => OnPropertyChanged(nameof(CurrentStartTime));
+        _timer.Start();
+    }
+
+    private void DeinitTimer()
+    {
+        if (_timer is null) return;
+        _timer.Stop();
+        _timer?.Dispose();
+        _timer = null;
+    }
 }

@@ -3,6 +3,7 @@
              x:Class="timesheet_tray_net.App"
              xmlns:local="using:timesheet_tray_net"
              xmlns:viewModels="clr-namespace:timesheet_tray_net.ViewModels"
+             xmlns:converters="clr-namespace:timesheet_tray_net.Converters"
              RequestedThemeVariant="Default"
              x:DataType="viewModels:AppViewModel">
     
@@ -11,6 +12,10 @@
      <Design.DataContext>
          <viewModels:AppViewModel />
      </Design.DataContext>
+    
+    <Application.Resources>
+        <converters:TimeConverter x:Key="TimeConverter"/>
+    </Application.Resources>
              
     <Application.DataTemplates>
         <local:ViewLocator />
@@ -29,6 +34,14 @@
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem 
+                            Header="{Binding CurrentStartTime, Converter={StaticResource TimeConverter}}"
+                            IsVisible="{Binding IsStarted}"
+                            IsEnabled="False"
+                            />
+                        <NativeMenuItemSeparator
+                            IsVisible="{Binding IsStarted}"
+                            />
+                        <NativeMenuItem 
                             Header="{Binding StartText}" 
                             IsVisible="{Binding !IsStarted}"
                             Command="{Binding StartCommand}"
@@ -37,12 +50,12 @@
                             Header="{Binding StopText}"
                             IsVisible="{Binding IsStarted}"
                             Command="{Binding StopCommand}"
-                        />
+                            />
                         <NativeMenuItemSeparator/>
                         <NativeMenuItem 
                             Header="{Binding ExportText}" 
                             Command="{Binding ExportCommand}"
-                        />
+                            />
                         <NativeMenuItem 
                             Header="{Binding QuitText}" 
                             Command="{Binding QuitCommand}"

@@ -12,16 +12,17 @@ public class EntryService(EntryRepository repository)
         return await repository.GetAll();
     }
     
-    public async Task Create()
+    public async Task<TimeEntry> Create()
     {
-        var user = new TimeEntry
+        var entry = new TimeEntry
         {
             StartDate = DateTime.UtcNow
         };
-        await repository.Create(user);
+        await repository.Create(entry);
+        return entry;
     }
 
-    public async Task Update(int id, DateTime finishDate)
+    public async Task<TimeEntry> Update(int id, DateTime finishDate)
     {
         var entry = await repository.GetById(id);
         if (entry == null)
@@ -29,6 +30,7 @@ public class EntryService(EntryRepository repository)
 
         entry.FinishDate = finishDate;
         await repository.Update(entry);
+        return entry;
     }
     
     public async Task Delete(int id)
