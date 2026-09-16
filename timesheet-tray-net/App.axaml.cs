@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -17,9 +19,19 @@ public partial class App : Application
     {
         AvaloniaXamlLoader.Load(this);
         
+        var configDir = Environment.GetFolderPath(
+            Environment.SpecialFolder.ApplicationData);
+        var appConfigDir = Path.Combine(configDir, "timesheet-tray-net");
+        Directory.CreateDirectory(appConfigDir);
+        Directory.SetCurrentDirectory(appConfigDir);
+        
         var serilogLogger = new LoggerConfiguration()
             .MinimumLevel.Information()
-            .WriteTo.File(new CompactJsonFormatter(),"logs/log.json", rollingInterval: RollingInterval.Day)
+            .WriteTo.File(
+                new CompactJsonFormatter(), 
+                "logs/log.json", 
+                rollingInterval: RollingInterval.Day
+                )
             .WriteTo.Console()
             .CreateLogger();
         
@@ -31,6 +43,7 @@ public partial class App : Application
         });
         
         serviceCollection.AddSingleton(new Window());
+        
         serviceCollection.AddSingleton<DataContext>();
         serviceCollection.AddScoped<EntryRepository>();
         serviceCollection.AddScoped<EntryService>();
