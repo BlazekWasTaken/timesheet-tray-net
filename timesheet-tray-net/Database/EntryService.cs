@@ -21,13 +21,18 @@ public class EntryService(EntryRepository repository)
         await repository.Create(user);
     }
 
-    public async Task Update(int id)
+    public async Task Update(int id, DateTime finishDate)
     {
         var entry = await repository.GetById(id);
         if (entry == null)
             throw new KeyNotFoundException("User not found");
 
-        entry.FinishDate = DateTime.UtcNow;
+        entry.FinishDate = finishDate;
         await repository.Update(entry);
+    }
+    
+    public async Task Delete(int id)
+    {
+        await repository.Delete(id);
     }
 }

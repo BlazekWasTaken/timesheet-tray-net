@@ -53,7 +53,13 @@ public partial class AppViewModel : ViewModelBase
         var entries = await _entryService.GetAll();
         var last = entries.OrderBy(x => x.StartDate).LastOrDefault();
         if (last is null || last.FinishDate is not null) return;
-        await _entryService.Update(last.Id);
+        var finishDate = DateTime.UtcNow;
+        var length = finishDate.Subtract(last.StartDate).TotalMinutes;
+        if (length >= 5)
+            await _entryService.Update(last.Id, finishDate);
+        else
+            await _entryService.Delete(last.Id);
+        
         IsStarted = false;
     }
 

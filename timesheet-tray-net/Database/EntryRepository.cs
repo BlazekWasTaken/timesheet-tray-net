@@ -47,4 +47,14 @@ public class EntryRepository(DataContext context)
                   """;
         await connection.ExecuteAsync(sql, timeEntry);
     }
+    
+    public async Task Delete(int id)
+    {
+        using var connection = context.CreateConnection();
+        var sql = """
+                      DELETE FROM TimeEntries
+                      WHERE Id = @id
+                  """;
+        await connection.ExecuteAsync(sql, new { id });
+    }
 }
