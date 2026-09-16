@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -18,6 +19,9 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        
+        if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
         
         var configDir = Environment.GetFolderPath(
             Environment.SpecialFolder.ApplicationData);
