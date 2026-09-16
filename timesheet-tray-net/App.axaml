@@ -51,6 +51,11 @@
                             IsVisible="{Binding IsStarted}"
                             Command="{Binding StopCommand}"
                             />
+                        <NativeMenuItem 
+                            Header="{Binding DiscardText}"
+                            IsVisible="{Binding IsStarted}"
+                            Command="{Binding DiscardCommand}"
+                        />
                         <NativeMenuItemSeparator/>
                         <NativeMenuItem 
                             Header="{Binding ExportText}" 

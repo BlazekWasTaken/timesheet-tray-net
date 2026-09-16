@@ -23,6 +23,7 @@ public partial class AppViewModel : ViewModelBase
     
     [ObservableProperty] public partial string StartText { get; set; } = "start working";
     [ObservableProperty] public partial string StopText { get; set; } = "stop working";
+    [ObservableProperty] public partial string DiscardText { get; set; } = "discard";
     [ObservableProperty] public partial string ExportText { get; set; } = "export";
     [ObservableProperty] public partial string QuitText { get; set; } = "quit";
 
@@ -69,6 +70,17 @@ public partial class AppViewModel : ViewModelBase
             await _entryService.Update(last.Id, finishDate);
         else
             await _entryService.Delete(last.Id);
+        IsStarted = false;
+        DeinitTimer();
+    }
+
+    [RelayCommand]
+    private async Task Discard()
+    {
+        var entries = await _entryService.GetAll();
+        var last = entries.OrderBy(x => x.StartDate).LastOrDefault();
+        if (last is null || last.FinishDate is not null) return;
+        await _entryService.Delete(last.Id);
         IsStarted = false;
         DeinitTimer();
     }
